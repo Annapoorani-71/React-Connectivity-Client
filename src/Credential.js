@@ -3,18 +3,18 @@ import "./App.css"
 import axios from 'axios';
 
 function App() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [userNames, setUserNames] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [userCredentials, setUserCredentials] = useState([]);
 
   const handlePost = () => {
-    axios.post('http://localhost:5000/register', { name, email })
+    axios.post('http://localhost:5000/register', { username, password })
       .then((response) => {
         const result = response.data;
         if (result) {
           alert("Data saved successfully");
-          setEmail("");
-          setName("");
+          setUsername("");
+          setPassword("");
         }
       })
       .catch((error) => {
@@ -27,8 +27,7 @@ function App() {
     axios.get('http://localhost:5000/')
       .then((response) => {
         const users = response.data;
-        const names = users.map((user) => user.name);
-        setUserNames(names);
+        setUserCredentials(users);
       })
       .catch((error) => {
         console.error("GET request error:", error);
@@ -39,28 +38,35 @@ function App() {
     <div className="container">
       <h1>This is React WebApp</h1>
       <form>
-      <label>Enter Email:&nbsp;&nbsp;</label>
+        <label>Enter Username:&nbsp;&nbsp;</label>
         <input
           type="text"
-          className="input-field" 
-          placeholder="ur email"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br></br>
-        <label>Enter password:&nbsp;&nbsp;</label>
-        <input
-          type="email"
           className="input-field"
-          placeholder="Enter ur password"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
-        <br></br>
+        <br /><br />
+        <label>Enter Password:&nbsp;&nbsp;</label>
+        <input
+          type="password"
+          className="input-field"
+          placeholder="Your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br /><br />
         <button type="button" onClick={handlePost}>Post</button>
         <button type="button" onClick={handleGet}>Get</button>
       </form>
-      <p>Names: {userNames.join(", ")}</p>
+      <div>
+        <h2>Stored User Credentials</h2>
+        <ul>
+          {userCredentials.map((user, index) => (
+            <li key={index}>Username: {user.username}, Password: {user.password}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
